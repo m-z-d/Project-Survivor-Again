@@ -120,7 +120,7 @@ class Wall(Enemy):
     Instances:list["Wall"]=[]
     def __init__(self, player, curse,length, coords=None): #code d'Enemy modifié pour les murs.
         hp=int(100 * curse)
-        atk=0
+        atk=10 #you can't breathe in walls.
         speed=0
         exp=20
         Display.__init__(self, "wall.png", (0, 0), 50)

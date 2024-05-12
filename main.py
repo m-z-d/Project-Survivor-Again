@@ -102,6 +102,15 @@ while running:
     # si le joueur bouge, on bouge toutes les autres entités
     if player.momentum != (0, 0):
         delta = player.momentum * dt * 150 * player.Get("speed")
+        #collide with wall.
+        if delta != pygame.Vector2(0,0):
+            for wall in Wall.Instances:
+                if ((wall.coord+ delta) - player.coord).magnitude() <= player.radius + wall.radius: #would it collide next frame?
+                    clip_distance= player.radius + wall.radius - ((wall.coord+ delta) - player.coord).magnitude()
+                    clip_vec=delta.normalize()*clip_distance
+                    if clip_distance>0:delta -= clip_vec
+
+
         for display in Projectile.Instances + Enemy.Instances +Wall.Instances:
             display.coord += delta
     for enemy in Enemy.Instances:

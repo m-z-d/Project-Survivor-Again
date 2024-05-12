@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import K_LEFT, K_RIGHT, K_UP, K_DOWN, K_w,K_z, K_a,K_q,K_s,K_d
 
 from Display import Display
-from Enemy import Wall
 from Projectile import Projectile
 from Entity import Entity
 
@@ -100,12 +99,6 @@ class Player(Display, Entity):
         if (x, y) != (0, 0):
             vec.normalize_ip()
         self.momentum:pygame.Vector2 = pygame.Vector2(x, y) * self.Get("speed")
-        #collide with wall.
-        for wall in Wall.Instances:
-            if ((self.coord + self.momentum) - wall.coord).magnitude() <= self.radius + wall.radius: #would it collide next frame?
-                clip_distance= self.radius + wall.radius - ((self.coord + self.momentum) - wall.coord).magnitude()
-                clip_vec=self.momentum.normalize()*clip_distance
-                self.momentum -= clip_vec
 
         Display.Update(self, dt)
 
@@ -124,3 +117,4 @@ class Player(Display, Entity):
         # mise à jour de l'exp requise pour monter de niveau
         self.experience -= self.maxexp
         self.maxexp *= 1.05
+from Enemy import Wall

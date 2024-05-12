@@ -1,6 +1,7 @@
+from math import log
 import pygame
 from pygame.locals import QUIT, K_1, K_2, K_3, K_KP1, K_KP2, K_KP3
-from random import random, shuffle
+from random import random, shuffle, randint
 from time import time
 
 from Display import Display
@@ -18,11 +19,12 @@ pygame.init()
 dimx, dimy = 1080, 720
 window = pygame.display.set_mode((dimx, dimy))
 player = Player("pip.png", 100, 0, 1, 1, 2.5, 1, 2, 2, 2, 1, [])
-waves = [Wave(0, (Newbie, 1)),
+waves = [Wave(0, (Newbie, 0.9),(Wall, 0.1)),
          Wave(60, (Newbie, 0.9), (Shootie, 0.1)),
          Wave(100, (Newbie, 1)),
          Wave(120, (Newbie, 0.7), (Floatie, 0.3)),
          Wave(140, (Floatie, 1)),
+         Wave(140, (Wall, 1)),
          Wave(180, (Newbie, 0.5), (Floatie, 0.5)),
          Wave(200, (Newbie, 1))]
 currentwave = 0
@@ -86,7 +88,11 @@ while running:
     curse = player.Get("curse") * ((timer / 300) + 1)
     if len(Enemy.Instances) == 0 \
             or random() < (1 / (len(Enemy.Instances) + 1)) * dt * 30 * curse:
-        waves[currentwave].GetEnemy()(player, curse)
+        enemy= waves[currentwave].GetEnemy()
+        if enemy is Wall:
+            enemy(player, curse, randint(1,int(log(curse)+1)))
+        else:
+            enemy(player, curse)
     if currentwave + 1 != len(waves) and timer >= waves[currentwave + 1].time:
         currentwave += 1
 
@@ -96,7 +102,7 @@ while running:
     # si le joueur bouge, on bouge toutes les autres entités
     if player.momentum != (0, 0):
         delta = player.momentum * dt * 150 * player.Get("speed")
-        for display in Projectile.Instances + Enemy.Instances:
+        for display in Projectile.Instances + Enemy.Instances +Wall.Instances:
             display.coord += delta
     for enemy in Enemy.Instances:
         enemy.Update(dt)

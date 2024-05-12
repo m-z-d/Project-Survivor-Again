@@ -5,7 +5,7 @@ from time import time
 
 from Display import Display
 from Player import Player
-from Enemy import Enemy, Newbie, Floatie, Shootie
+from Enemy import Enemy, Newbie, Floatie, Shootie, Wall
 from Projectile import Projectile
 import Upgrade as m_Upgrade
 from Upgrade import Upgrade
@@ -104,6 +104,10 @@ while running:
     for proj in Projectile.Instances:
         proj.Update(dt)
         window.blit(proj.surf, proj.rect)
+    for wall in Wall.Instances:
+        wall.Update(dt)
+        window.blit(wall.surf, wall.rect)
+        
     window.blit(player.surf, player.rect)
 
     # creation de la barre de vie

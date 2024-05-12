@@ -116,3 +116,42 @@ class EnemyProj(Enemy):
     def Update(self, dt):
         self.coord += self.movement * dt
         super().Update(dt)
+class Wall(Enemy):
+    Instances:list["Wall"]=[]
+    def __init__(self, player, curse,length, coords=None): #code d'Enemy modifié pour les murs.
+        hp=int(100 * curse)
+        atk=0
+        speed=0
+        exp=20
+        Display.__init__(self, "wall.png", (0, 0), 50)
+        
+        if coords is None:
+            # on choisit un bord d'où faire apparaitre le début du mur
+            width, height = pygame.display.get_surface().get_size()
+            weights = [width, width, height, height]
+            side = choices(sides, weights)[0]
+            if side == 'top':
+                y = 0
+                x = randrange(width - 4)
+                offs=pygame.Vector2(100,0)
+            elif side == 'bottom':
+                y = height - 4
+                x = randrange(width - 4)
+                offs=pygame.Vector2(-100,0)
+            elif side == 'left':
+                x = 0
+                y = randrange(height - 4)
+                offs=pygame.Vector2(0,100)
+            else:
+                x = width - 4
+                y = randrange(height - 4)
+                offs=pygame.Vector2(0,-100)
+            coords = pygame.Vector2(x, y)
+            for _ in range(length):
+                Wall(player,curse,length=0,coords=coords+offs)
+        self.coord=coords
+        self.angle = 0
+
+        Entity.__init__(self, {}, maxhp=hp, armor=1, speed=speed, atk=atk, exp=exp)
+        self._player_ref: Player = player
+        Wall.Instances.append(self)

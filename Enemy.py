@@ -125,7 +125,7 @@ class Wall(Enemy):
         exp=20
         Display.__init__(self, "wall.png", (0, 0), 50)
         
-        if coords is None:
+        if coords is None: #détermine si c'est le début du mur ou si on doit juste générer l'entité
             # on choisit un bord d'où faire apparaitre le début du mur
             width, height = pygame.display.get_surface().get_size()
             weights = [width, width, height, height]
@@ -147,8 +147,9 @@ class Wall(Enemy):
                 y = randrange(height - 4)
                 offs=pygame.Vector2(0,-100)
             coords = pygame.Vector2(x, y)
-            for _ in range(length):
+            for _ in range(length): #faire apparaître la suite du mur
                 Wall(player,curse,length=0,coords=coords+offs)
+        #initialiser le mur, début ou non
         self.coord=coords
         self.angle = 0
 
